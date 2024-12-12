@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CF07089B2D0BACF5003B7861 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = CF07089A2D0BACF5003B7861 /* Home */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		CF07086A2D0BA9D6003B7861 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,10 @@
 		CF0708592D0BA9D5003B7861 /* Weather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Weather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF0708692D0BA9D6003B7861 /* WeatherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF0708732D0BA9D6003B7861 /* WeatherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF0708862D0BAAC5003B7861 /* Models */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Models; sourceTree = "<group>"; };
+		CF0708872D0BAB0B003B7861 /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
+		CF0708882D0BAB4D003B7861 /* UI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UI; sourceTree = "<group>"; };
+		CF0708892D0BABF3003B7861 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF07089B2D0BACF5003B7861 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +84,10 @@
 		CF0708502D0BA9D5003B7861 = {
 			isa = PBXGroup;
 			children = (
+				CF0708892D0BABF3003B7861 /* Home */,
+				CF0708862D0BAAC5003B7861 /* Models */,
+				CF0708872D0BAB0B003B7861 /* Networking */,
+				CF0708882D0BAB4D003B7861 /* UI */,
 				CF07085B2D0BA9D5003B7861 /* Weather */,
 				CF07086C2D0BA9D6003B7861 /* WeatherTests */,
 				CF0708762D0BA9D6003B7861 /* WeatherUITests */,
@@ -112,6 +125,7 @@
 			);
 			name = Weather;
 			packageProductDependencies = (
+				CF07089A2D0BACF5003B7861 /* Home */,
 			);
 			productName = Weather;
 			productReference = CF0708592D0BA9D5003B7861 /* Weather.app */;
@@ -195,6 +209,9 @@
 			);
 			mainGroup = CF0708502D0BA9D5003B7861;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CF0708992D0BACF5003B7861 /* XCLocalSwiftPackageReference "Home" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CF07085A2D0BA9D5003B7861 /* Products */;
 			projectDirPath = "";
@@ -404,6 +421,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -433,6 +451,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,6 +577,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		CF0708992D0BACF5003B7861 /* XCLocalSwiftPackageReference "Home" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Home;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CF07089A2D0BACF5003B7861 /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CF0708512D0BA9D5003B7861 /* Project object */;
 }

@@ -6,12 +6,21 @@
 //
 
 import SwiftUI
+import Home
 
 @main
 struct WeatherApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView()
+        }
+    }
+}
+
+struct AppView: View {
+    var body: some View {
+        NavigationStack {
+            HomeView()
         }
     }
 }
