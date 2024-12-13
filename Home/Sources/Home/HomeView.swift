@@ -35,21 +35,9 @@ public struct HomeView: View {
                 Text("\(weather)")
             } else if let location = viewModel.location {
                 Text("No weather for \(location)")
-            } else if viewModel.location == nil {
-                VStack {
-                    Text("No City Selected")
-                        .font(.title)
-                        .padding()
-                    Text("Please search for a city")
-                }
             } else {
-                LazyVStack {
-                    ForEach(viewModel.searchResults) { result in
-                        Text("\(result.name)").onTapGesture {
-                            onLocationSelect(result)
-                        }
-                    }
-                }
+                HomeSearchResultsView()
+                    .environment(viewModel)
             }
         }
         .onAppear(perform: onAppear)
@@ -70,11 +58,35 @@ public struct HomeView: View {
             await viewModel.search(for: searchText)
         }
     }
+}
+
+struct HomeSearchResultsView: View {
+    @Environment(\.dismissSearch)
+    private var dismissSearch
+    @Environment(HomeViewModel.self)
+    private var viewModel
+
+    var body: some View {
+        if viewModel.searchResults.isEmpty {
+            VStack {
+                Text("No City Selected")
+                    .font(.title)
+                    .padding()
+                Text("Please search for a city")
+            }
+        } else {
+            List(viewModel.searchResults) { result in
+                Text("\(result.name), \(result.region), \(result.country)").onTapGesture {
+                    dismissSearch()
+                    onLocationSelect(result)
+                }
+            }
+        }
+    }
 
     private func onLocationSelect(_ location: LocationSearchResult) {
         Task {
             await viewModel.selectLocation(location)
-            await viewModel.fetchWeather(for: location)
         }
     }
 }
