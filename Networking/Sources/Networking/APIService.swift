@@ -37,17 +37,23 @@ public actor APIService: APIServiceProtocol {
         components?.queryItems = request.queryItems.map { $0 + [.init(name: "key", value: key)] }
         guard let finalURL = components?.url else { throw APIError.invalidURL }
         logger.debug("Requesting \(finalURL)")
-        let (data, _): (Data, URLResponse)
+        let (data, response): (Data, URLResponse)
         do {
-            (data, _) = try await session.data(from: finalURL)
+            (data, response) = try await session.data(from: finalURL)
         } catch {
             throw APIError.networkError(error)
         }
         do {
-            logger.debug("Decoding data: \(String(data: data, encoding: .utf8) ?? "")")
-            return try decoder.decode(T.Response.self, from: data)
+            if let httpResponse = response as? HTTPURLResponse,
+                (200...299).contains(httpResponse.statusCode) {
+                logger.debug("Decoding data: \(String(data: data, encoding: .utf8) ?? "")")
+                return try decoder.decode(T.Response.self, from: data)
+            } else if let errorResponse = try? decoder.decode(APIErrorResponse.self, from: data) {
+                throw APIError.apiError(errorResponse.error)
+            } else {
+                throw APIError.invalidResponse
+            }
         } catch {
-#warning("TODO: server error info can come back as data packet")
             throw APIError.decodingError(error)
         }
     }

@@ -8,12 +8,18 @@
 import Foundation
 
 public enum APIError: LocalizedError {
+    case apiError(APIErrorResponse.ErrorInfo)
+    case invalidResponse
     case invalidURL
     case networkError(Error)
     case decodingError(Error)
 
     public var errorDescription: String? {
         switch self {
+        case .apiError(let errorInfo):
+            "\(errorInfo.code): \(errorInfo.message)"
+        case .invalidResponse:
+            "Invalid Response"
         case .invalidURL:
             "Invalid URL"
         case .networkError(let error):
