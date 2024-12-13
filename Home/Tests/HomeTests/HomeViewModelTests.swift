@@ -63,16 +63,20 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.error as? HomeServiceError, .weatherRequestError)
     }
 
-    func test_search_locationSelected_selectionCleared() async {
+    func test_search_locationSelected_selectionWeatherCleared() async {
         let (service, viewModel) = configure()
-        // given location selected
+        // given location selected and weather loaded
+        service.fetchWeatherResults[2634070] = .success(.mock)
         await viewModel.selectLocation(LocationSearchResult.mock)
         XCTAssertEqual(service.selectedLocation, .mock)
         XCTAssertEqual(viewModel.location, .mock)
+        XCTAssertEqual(viewModel.weather, .mock)
         // when some search is performed
         await viewModel.search(for: "Portland")
         // then selection cleared from view model
         XCTAssertNil(viewModel.location)
+        // and weather cleared from view model
+        XCTAssertNil(viewModel.weather)
         // and selection cleared from service
         XCTAssertNil(service.selectedLocation)
     }

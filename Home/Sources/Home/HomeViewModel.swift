@@ -48,6 +48,7 @@ public final class HomeViewModel {
     }
 
     func selectLocation(_ location: LocationSearchResult?) async {
+        self.weather = nil
         self.location = location
         await service.saveSelectedLocation(location)
         guard let location else { return }
