@@ -14,7 +14,7 @@ public final class HomeViewModel {
     private let service: HomeServiceProtocol
     private(set) var loading = false
     private(set) var searchResults = [LocationSearchResult]()
-    private(set) var location: String?
+    private(set) var location: LocationSearchResult?
     private(set) var weather: CurrentWeather?
     private(set) var error: Error?
 
@@ -30,6 +30,7 @@ public final class HomeViewModel {
 
     func search(for query: String) async {
         do {
+            await selectLocation(nil)
             searchResults = try await service.searchCities(query: query)
         } catch {
             handleError(error)
@@ -46,7 +47,14 @@ public final class HomeViewModel {
         loading = false
     }
 
-    func fetchWeather(for location: String) async {
+    func selectLocation(_ location: LocationSearchResult?) async {
+        self.location = location
+        await service.saveSelectedLocation(location)
+        guard let location else { return }
+        await fetchWeather(for: location)
+    }
+
+    func fetchWeather(for location: LocationSearchResult) async {
         loading = true
         do {
             weather = try await service.fetchWeather(for: location)

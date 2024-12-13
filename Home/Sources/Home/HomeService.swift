@@ -21,28 +21,37 @@ enum HomeServiceError: LocalizedError {
 }
 
 public protocol HomeServiceProtocol: Sendable {
-    func loadSelectedLocation() async throws -> String?
+    func loadSelectedLocation() async throws -> LocationSearchResult?
+    func saveSelectedLocation(_ location: LocationSearchResult?) async
     func searchCities(query: String) async throws -> [LocationSearchResult]
-    func fetchWeather(for location: String) async throws -> CurrentWeather?
+    func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather?
 }
 
 public final class HomeService: HomeServiceProtocol {
     private let api: APIService
+    private let defaults: DefaultsServiceProtocol
 
-    public init(api: APIService = .init()) {
+    public init(
+        api: APIService = .init(),
+        defaults: DefaultsServiceProtocol = DefaultsService()
+    ) {
         self.api = api
+        self.defaults = defaults
     }
 
-    public func loadSelectedLocation() async throws -> String? {
-#warning("TODO: implement load selected location")
-        return nil
+    public func loadSelectedLocation() async throws -> LocationSearchResult? {
+        defaults.get(LocationSearchResult.self, forKey: "selectedLocation")
+    }
+
+    public func saveSelectedLocation(_ location: LocationSearchResult?) async {
+        defaults.set(location, forKey: "selectedLocation")
     }
 
     public func searchCities(query: String) async throws -> [LocationSearchResult] {
         try await api.request(LocationSearchRequest(query: query))
     }
 
-    public func fetchWeather(for location: String) async throws -> CurrentWeather? {
+    public func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather? {
 #warning("TODO: implement weather fetch")
         return nil
     }

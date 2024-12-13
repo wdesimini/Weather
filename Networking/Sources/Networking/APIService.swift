@@ -30,7 +30,7 @@ public actor APIService {
     public func request<T: APIRequest>(_ request: T) async throws -> T.Response {
         let url = baseURL.appendingPathComponent(request.path)
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        components?.queryItems = request.queryItems
+        components?.queryItems = request.queryItems.map { $0 + [.init(name: "key", value: key)] }
         guard let finalURL = components?.url else { throw APIError.invalidURL }
         logger.debug("Requesting \(finalURL)")
         let (data, _): (Data, URLResponse)

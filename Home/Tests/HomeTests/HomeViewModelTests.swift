@@ -34,13 +34,13 @@ final class HomeViewModelTests: XCTestCase {
     func test_onAppear_savedLocationWeatherRequest_success() async {
         let (service, viewModel) = configure()
         // given location saved
-        service.selectedLocation = "Portland, OR"
+        service.selectedLocation = .mock
         // and weather request for location succeeds
-        service.fetchWeatherResults["Portland, OR"] = .success(.mock)
+        service.fetchWeatherResults[2634070] = .success(.mock)
         // when when view appears
         await viewModel.onAppear()
         // then home should have selected location
-        XCTAssertEqual(viewModel.location, "Portland, OR")
+        XCTAssertEqual(viewModel.location, .mock)
         // and home should have weather
         XCTAssertEqual(viewModel.weather, .mock)
         // and home should not have error
@@ -50,17 +50,31 @@ final class HomeViewModelTests: XCTestCase {
     func test_onAppear_savedLocationFailedWeatherRequest_error() async {
         let (service, viewModel) = configure()
         // given location saved
-        service.selectedLocation = "Portland, OR"
+        service.selectedLocation = .mock
         // and weather request for location fails
-        service.fetchWeatherResults["Portland, OR"] = .failure(.weatherRequestError)
+        service.fetchWeatherResults[2634070] = .failure(.weatherRequestError)
         // when when view appears
         await viewModel.onAppear()
         // then home should have selected location
-        XCTAssertEqual(viewModel.location, "Portland, OR")
+        XCTAssertEqual(viewModel.location, .mock)
         // and home should not have weather
         XCTAssertNil(viewModel.weather)
         // and home should show weather request error
         XCTAssertEqual(viewModel.error as? HomeServiceError, .weatherRequestError)
+    }
+
+    func test_search_locationSelected_selectionCleared() async {
+        let (service, viewModel) = configure()
+        // given location selected
+        await viewModel.selectLocation(LocationSearchResult.mock)
+        XCTAssertEqual(service.selectedLocation, .mock)
+        XCTAssertEqual(viewModel.location, .mock)
+        // when some search is performed
+        await viewModel.search(for: "Portland")
+        // then selection cleared from view model
+        XCTAssertNil(viewModel.location)
+        // and selection cleared from service
+        XCTAssertNil(service.selectedLocation)
     }
 
     func test_search_searchSuccessful_searchResults() async {
@@ -74,25 +88,61 @@ final class HomeViewModelTests: XCTestCase {
         // then search results should be set
         XCTAssertEqual(viewModel.searchResults, .mock)
     }
+
+    func test_selectLocation_locationSelectedSuccessfulWeatherRequest_locationSavedWeatherFetched() async {
+        let (service, viewModel) = configure()
+        // given a location
+        let location = LocationSearchResult.mock
+        // and the location weather
+        service.fetchWeatherResults[location.id] = .success(.mock)
+        // when location is selected
+        await viewModel.selectLocation(location)
+        // then location is selected
+        XCTAssertEqual(viewModel.location, location)
+        // and location is saved
+        XCTAssertEqual(service.selectedLocation, location)
+        // and weather is fetched
+        XCTAssertEqual(viewModel.weather, .mock)
+    }
+
+    func test_selectLocation_locationSelectedFailedWeatherRequest_locationSavedRequestError() async {
+        let (service, viewModel) = configure()
+        // given a location
+        let location = LocationSearchResult.mock
+        // and the location weather request fails
+        service.fetchWeatherResults[location.id] = .failure(.weatherRequestError)
+        // when location is selected
+        await viewModel.selectLocation(location)
+        // then location is selected
+        XCTAssertEqual(viewModel.location, location)
+        // and location is saved
+        XCTAssertEqual(service.selectedLocation, location)
+        // and error is set
+        XCTAssertEqual(viewModel.error as? HomeServiceError, .weatherRequestError)
+    }
 }
 
 // MARK: - Mocks
 
 private final class MockHomeService: HomeServiceProtocol, @unchecked Sendable {
-    var selectedLocation: String?
-    var searchCitiesResults = [String: Result< [LocationSearchResult], HomeServiceError>]()
-    var fetchWeatherResults = [String: Result<CurrentWeather?, HomeServiceError>]()
+    var selectedLocation: LocationSearchResult?
+    var searchCitiesResults = [String: Result<[LocationSearchResult], HomeServiceError>]()
+    var fetchWeatherResults = [LocationSearchResult.ID: Result<CurrentWeather?, HomeServiceError>]()
 
-    func loadSelectedLocation() async throws -> String? {
+    func loadSelectedLocation() async throws -> LocationSearchResult? {
         selectedLocation
     }
 
-    func searchCities(query: String) async throws ->  [LocationSearchResult] {
-        try searchCitiesResults[query]!.get()
+    func saveSelectedLocation(_ location: LocationSearchResult?) async {
+        selectedLocation = location
     }
 
-    func fetchWeather(for location: String) async throws -> CurrentWeather? {
-        try fetchWeatherResults[location]!.get()
+    func searchCities(query: String) async throws ->  [LocationSearchResult] {
+        try searchCitiesResults[query]?.get() ?? []
+    }
+
+    func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather? {
+        try fetchWeatherResults[location.id]?.get()
     }
 }
 
@@ -100,6 +150,12 @@ private struct MockDataGenerator {
     static func mock<T: Decodable>(from raw: String) -> T {
         let data = raw.data(using: .utf8)!
         return try! JSONDecoder.apiDecoder.decode(T.self, from: data)
+    }
+}
+
+extension LocationSearchResult {
+    static var mock: Self {
+        MockDataGenerator.mock(from: #"{"id":2634070,"name":"Portland","region":"Oregon","country":"United States of America","lat":45.52,"lon":-122.68,"url":"portland-oregon-united-states-of-america"}"#)
     }
 }
 

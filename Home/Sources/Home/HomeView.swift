@@ -45,7 +45,9 @@ public struct HomeView: View {
             } else {
                 LazyVStack {
                     ForEach(viewModel.searchResults) { result in
-                        Text("\(result)")
+                        Text("\(result.name)").onTapGesture {
+                            onLocationSelect(result)
+                        }
                     }
                 }
             }
@@ -68,20 +70,30 @@ public struct HomeView: View {
             await viewModel.search(for: searchText)
         }
     }
+
+    private func onLocationSelect(_ location: LocationSearchResult) {
+        Task {
+            await viewModel.selectLocation(location)
+            await viewModel.fetchWeather(for: location)
+        }
+    }
 }
 
 // MARK: - Previews
 
 private final class PreviewHomeService: HomeServiceProtocol {
-    func loadSelectedLocation() async throws -> String? {
-        "Portland, OR"
+    func loadSelectedLocation() async throws -> LocationSearchResult? {
+        .init(id: 2634070, name: "Portland", region: "OR", country: "US", lat: 45.52, lon: -122.68, url: "portland-oregon-united-states-of-america")
+    }
+
+    func saveSelectedLocation(_ location: LocationSearchResult?) async {
     }
 
     func searchCities(query: String) async throws -> [LocationSearchResult] {
         []
     }
 
-    func fetchWeather(for location: String) async throws -> CurrentWeather? {
+    func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather? {
         nil
     }
 }
