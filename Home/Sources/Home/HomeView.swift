@@ -90,28 +90,3 @@ struct HomeSearchResultsView: View {
         }
     }
 }
-
-// MARK: - Previews
-
-private final class PreviewHomeService: HomeServiceProtocol {
-    func loadSelectedLocation() async throws -> LocationSearchResult? {
-        .init(id: 2634070, name: "Portland", region: "OR", country: "US", lat: 45.52, lon: -122.68, url: "portland-oregon-united-states-of-america")
-    }
-
-    func saveSelectedLocation(_ location: LocationSearchResult?) async {
-    }
-
-    func searchCities(query: String) async throws -> [LocationSearchResult] {
-        []
-    }
-
-    func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather? {
-        nil
-    }
-}
-
-#Preview {
-    NavigationStack {
-        HomeView(viewModel: HomeViewModel(service: PreviewHomeService()))
-    }
-}
