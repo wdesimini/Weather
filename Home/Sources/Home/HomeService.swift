@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Models
+import Networking
 
 enum HomeServiceError: LocalizedError {
     case weatherRequestError
@@ -20,12 +22,15 @@ enum HomeServiceError: LocalizedError {
 
 public protocol HomeServiceProtocol: Sendable {
     func loadSelectedLocation() async throws -> String?
-    func searchCities(query: String) async throws -> [String]
-    func fetchWeather(for location: String) async throws -> String?
+    func searchCities(query: String) async throws -> [LocationSearchResult]
+    func fetchWeather(for location: String) async throws -> CurrentWeather?
 }
 
 public final class HomeService: HomeServiceProtocol {
-    public init() {
+    private let api: APIService
+
+    public init(api: APIService = .init()) {
+        self.api = api
     }
 
     public func loadSelectedLocation() async throws -> String? {
@@ -33,12 +38,11 @@ public final class HomeService: HomeServiceProtocol {
         return nil
     }
 
-    public func searchCities(query: String) async throws -> [String] {
-#warning("TODO: implement search")
-        return ["\(query)", "\(query) again"]
+    public func searchCities(query: String) async throws -> [LocationSearchResult] {
+        try await api.request(LocationSearchRequest(query: query))
     }
 
-    public func fetchWeather(for location: String) async throws -> String? {
+    public func fetchWeather(for location: String) async throws -> CurrentWeather? {
 #warning("TODO: implement weather fetch")
         return nil
     }

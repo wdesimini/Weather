@@ -1,5 +1,5 @@
 //
-//  Weather.swift
+//  CurrentWeather.swift
 //  Models
 //
 //  Created by Wilson Desimini on 12/12/24.
@@ -7,12 +7,9 @@
 
 import Foundation
 
-// sample data
-// {"location":{"name":"Portland","region":"Oregon","country":"United States of America","lat":45.5236,"lon":-122.675,"tz_id":"America/Los_Angeles","localtime_epoch":1734052976,"localtime":"2024-12-12 17:22"},"current":{"last_updated_epoch":1734052500,"last_updated":"2024-12-12 17:15","temp_c":4.4,"temp_f":39.9,"is_day":0,"condition":{"text":"Light rain","icon":"//cdn.weatherapi.com/weather/64x64/night/296.png","code":1183},"wind_mph":2.2,"wind_kph":3.6,"wind_degree":64,"wind_dir":"ENE","pressure_mb":1012.0,"pressure_in":29.88,"precip_mm":0.0,"precip_in":0.0,"humidity":83,"cloud":100,"feelslike_c":4.0,"feelslike_f":39.3,"windchill_c":3.4,"windchill_f":38.1,"heatindex_c":4.7,"heatindex_f":40.4,"dewpoint_c":2.7,"dewpoint_f":36.9,"vis_km":16.0,"vis_miles":9.0,"uv":0.0,"gust_mph":2.7,"gust_kph":4.3}}
-
-public struct CurrentLocationWeather: Codable {
-    public struct Weather: Codable {
-        public struct Condition: Codable {
+public struct CurrentWeather: Codable, Sendable, Equatable {
+    public struct Weather: Codable, Sendable, Equatable {
+        public struct Condition: Codable, Sendable, Equatable {
             public let text: String
             public let icon: String
             public let code: Int
@@ -87,7 +84,7 @@ public struct CurrentLocationWeather: Codable {
         }
     }
 
-    public struct Location: Codable {
+    public struct Location: Codable, Sendable, Equatable {
         public let name: String
         public let region: String
         public let country: String

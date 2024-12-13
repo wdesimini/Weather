@@ -6,15 +6,16 @@
 //
 
 import Foundation
+import Models
 
 @MainActor
 @Observable
 public final class HomeViewModel {
     private let service: HomeServiceProtocol
     private(set) var loading = false
-    private(set) var searchResults = [String]()
+    private(set) var searchResults = [LocationSearchResult]()
     private(set) var location: String?
-    private(set) var weather: String?
+    private(set) var weather: CurrentWeather?
     private(set) var error: Error?
 
     public init(service: HomeServiceProtocol = HomeService()) {

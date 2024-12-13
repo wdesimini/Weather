@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Models
 import UI
 
 public struct HomeView: View {
@@ -31,7 +32,7 @@ public struct HomeView: View {
             if viewModel.loading {
                 ProgressView()
             } else if let weather = viewModel.weather {
-                Text(weather)
+                Text("\(weather)")
             } else if let location = viewModel.location {
                 Text("No weather for \(location)")
             } else if viewModel.location == nil {
@@ -43,8 +44,8 @@ public struct HomeView: View {
                 }
             } else {
                 LazyVStack {
-                    ForEach(viewModel.searchResults, id: \.self) { result in
-                        Text(result)
+                    ForEach(viewModel.searchResults) { result in
+                        Text("\(result)")
                     }
                 }
             }
@@ -76,11 +77,11 @@ private final class PreviewHomeService: HomeServiceProtocol {
         "Portland, OR"
     }
 
-    func searchCities(query: String) async throws -> [String] {
-        ["\(query)", "\(query) again"]
+    func searchCities(query: String) async throws -> [LocationSearchResult] {
+        []
     }
 
-    func fetchWeather(for location: String) async throws -> String? {
+    func fetchWeather(for location: String) async throws -> CurrentWeather? {
         nil
     }
 }
