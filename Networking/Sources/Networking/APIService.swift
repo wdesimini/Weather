@@ -8,7 +8,11 @@
 import Foundation
 import os.log
 
-public actor APIService {
+public protocol APIServiceProtocol: Actor {
+    func request<T: APIRequest>(_ request: T) async throws -> T.Response
+}
+
+public actor APIService: APIServiceProtocol {
     private let baseURL: URL
     private let key: String
     private let decoder: JSONDecoder

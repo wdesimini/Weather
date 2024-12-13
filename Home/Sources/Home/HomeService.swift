@@ -17,11 +17,11 @@ public protocol HomeServiceProtocol: Sendable {
 }
 
 public final class HomeService: HomeServiceProtocol {
-    private let api: APIService
+    private let api: APIServiceProtocol
     private let defaults: DefaultsServiceProtocol
 
     public init(
-        api: APIService = .init(),
+        api: APIServiceProtocol = APIService(),
         defaults: DefaultsServiceProtocol = DefaultsService()
     ) {
         self.api = api
