@@ -52,7 +52,6 @@ public final class HomeService: HomeServiceProtocol {
     }
 
     public func fetchWeather(for location: LocationSearchResult) async throws -> CurrentWeather? {
-#warning("TODO: implement weather fetch")
-        return nil
+        try await api.request(CurrentWeatherRequest(locationId: location.id))
     }
 }
