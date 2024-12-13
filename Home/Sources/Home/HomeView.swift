@@ -41,7 +41,7 @@ public struct HomeView: View {
             }
         }
         .onAppear(perform: onAppear)
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, prompt: Text("Search Location"))
         .disabled(viewModel.loading)
         .onSubmit(of: .search, onSearch)
         .errorAlert(error: errorBinding)
