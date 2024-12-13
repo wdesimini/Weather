@@ -40,11 +40,15 @@ public final class HomeService: HomeServiceProtocol {
     }
 
     public func loadSelectedLocation() async throws -> LocationSearchResult? {
-        defaults.get(LocationSearchResult.self, forKey: "selectedLocation")
+        defaults.get(forKey: "selectedLocation")
     }
 
     public func saveSelectedLocation(_ location: LocationSearchResult?) async {
-        defaults.set(location, forKey: "selectedLocation")
+        if let location = location {
+            defaults.set(location, forKey: "selectedLocation")
+        } else {
+            defaults.removeValue(forKey: "selectedLocation")
+        }
     }
 
     public func searchCities(query: String) async throws -> [LocationSearchResult] {
