@@ -31,13 +31,13 @@ public struct CurrentWeather: Codable, Sendable, Equatable {
         public let windKph: Double
         public let windDegree: Int
         public let windDir: String
-        public let pressureMb: Int
+        public let pressureMb: Double
         public let pressureIn: Double
-        public let precipMm: Int
-        public let precipIn: Int
+        public let precipMm: Double
+        public let precipIn: Double
         public let humidity: Int
         public let cloud: Int
-        public let feelslikeC: Int
+        public let feelslikeC: Double
         public let feelslikeF: Double
         public let windchillC: Double
         public let windchillF: Double
@@ -45,13 +45,13 @@ public struct CurrentWeather: Codable, Sendable, Equatable {
         public let heatindexF: Double
         public let dewpointC: Double
         public let dewpointF: Double
-        public let visKm: Int
-        public let visMiles: Int
-        public let uv: Int
+        public let visKm: Double
+        public let visMiles: Double
+        public let uv: Double
         public let gustMph: Double
         public let gustKph: Double
 
-        public init(lastUpdatedEpoch: Int, lastUpdated: String, tempC: Double, tempF: Double, isDay: Int, condition: Condition, windMph: Double, windKph: Double, windDegree: Int, windDir: String, pressureMb: Int, pressureIn: Double, precipMm: Int, precipIn: Int, humidity: Int, cloud: Int, feelslikeC: Int, feelslikeF: Double, windchillC: Double, windchillF: Double, heatindexC: Double, heatindexF: Double, dewpointC: Double, dewpointF: Double, visKm: Int, visMiles: Int, uv: Int, gustMph: Double, gustKph: Double) {
+        public init(lastUpdatedEpoch: Int, lastUpdated: String, tempC: Double, tempF: Double, isDay: Int, condition: Condition, windMph: Double, windKph: Double, windDegree: Int, windDir: String, pressureMb: Double, pressureIn: Double, precipMm: Double, precipIn: Double, humidity: Int, cloud: Int, feelslikeC: Double, feelslikeF: Double, windchillC: Double, windchillF: Double, heatindexC: Double, heatindexF: Double, dewpointC: Double, dewpointF: Double, visKm: Double, visMiles: Double, uv: Double, gustMph: Double, gustKph: Double) {
             self.lastUpdatedEpoch = lastUpdatedEpoch
             self.lastUpdated = lastUpdated
             self.tempC = tempC
