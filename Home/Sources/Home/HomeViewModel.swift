@@ -29,12 +29,14 @@ public final class HomeViewModel {
     }
 
     func search(for query: String) async {
+        loading = true
         do {
             await selectLocation(nil)
             searchResults = try await service.searchCities(query: query)
         } catch {
             handleError(error)
         }
+        loading = false
     }
 
     func loadSelectedLocation() async {
