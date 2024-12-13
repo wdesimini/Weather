@@ -17,7 +17,7 @@ public actor APIService {
 
     public init(
         baseURL: URL = URL(string: "https://api.weatherapi.com")!,
-        key: String = "",
+        key: String = APIEnvironment.key,
         decoder: JSONDecoder = .apiDecoder,
         session: URLSession = .shared
     ) {
