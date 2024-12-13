@@ -16,7 +16,7 @@ public actor APIService {
     private let session: URLSession
 
     public init(
-        baseURL: URL = URL(string: "api.weatherapi.com")!,
+        baseURL: URL = URL(string: "https://api.weatherapi.com")!,
         key: String = "",
         decoder: JSONDecoder = .apiDecoder,
         session: URLSession = .shared
@@ -40,9 +40,10 @@ public actor APIService {
             throw APIError.networkError(error)
         }
         do {
-            logger.debug("Decoding data (len: \(data.count), type: \(T.Response.self))")
+            logger.debug("Decoding data: \(String(data: data, encoding: .utf8) ?? "")")
             return try decoder.decode(T.Response.self, from: data)
         } catch {
+#warning("TODO: server error info can come back as data packet")
             throw APIError.decodingError(error)
         }
     }
