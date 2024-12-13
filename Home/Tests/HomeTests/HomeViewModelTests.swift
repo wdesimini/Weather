@@ -60,7 +60,7 @@ final class HomeViewModelTests: XCTestCase {
         // and home should not have weather
         XCTAssertNil(viewModel.weather)
         // and home should show weather request error
-        XCTAssertEqual(viewModel.error as? HomeServiceError, .weatherRequestError)
+        XCTAssertEqual(viewModel.error as? MockHomeServiceError, .weatherRequestError)
     }
 
     func test_search_locationSelected_selectionWeatherCleared() async {
@@ -122,7 +122,7 @@ final class HomeViewModelTests: XCTestCase {
         // and location is saved
         XCTAssertEqual(service.selectedLocation, location)
         // and error is set
-        XCTAssertEqual(viewModel.error as? HomeServiceError, .weatherRequestError)
+        XCTAssertEqual(viewModel.error as? MockHomeServiceError, .weatherRequestError)
     }
 }
 
@@ -130,8 +130,8 @@ final class HomeViewModelTests: XCTestCase {
 
 private final class MockHomeService: HomeServiceProtocol, @unchecked Sendable {
     var selectedLocation: LocationSearchResult?
-    var searchCitiesResults = [String: Result<[LocationSearchResult], HomeServiceError>]()
-    var fetchWeatherResults = [LocationSearchResult.ID: Result<CurrentWeather?, HomeServiceError>]()
+    var searchCitiesResults = [String: Result<[LocationSearchResult], MockHomeServiceError>]()
+    var fetchWeatherResults = [LocationSearchResult.ID: Result<CurrentWeather?, MockHomeServiceError>]()
 
     func loadSelectedLocation() async throws -> LocationSearchResult? {
         selectedLocation
@@ -155,6 +155,10 @@ private struct MockDataGenerator {
         let data = raw.data(using: .utf8)!
         return try! JSONDecoder.apiDecoder.decode(T.self, from: data)
     }
+}
+
+private enum MockHomeServiceError: Error {
+    case weatherRequestError
 }
 
 extension LocationSearchResult {

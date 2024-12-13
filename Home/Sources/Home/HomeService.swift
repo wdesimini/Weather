@@ -9,17 +9,6 @@ import Foundation
 import Models
 import Networking
 
-enum HomeServiceError: LocalizedError {
-    case weatherRequestError
-
-    var errorDescription: String? {
-        switch self {
-        case .weatherRequestError:
-            "Error fetching weather"
-        }
-    }
-}
-
 public protocol HomeServiceProtocol: Sendable {
     func loadSelectedLocation() async throws -> LocationSearchResult?
     func saveSelectedLocation(_ location: LocationSearchResult?) async
