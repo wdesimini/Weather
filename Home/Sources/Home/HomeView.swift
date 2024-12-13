@@ -32,7 +32,7 @@ public struct HomeView: View {
             if viewModel.loading {
                 ProgressView()
             } else if let weather = viewModel.weather {
-                Text("\(weather)")
+                CurrentWeatherDetailView(viewModel: .init(weather: weather))
             } else if let location = viewModel.location {
                 Text("No weather for \(location)")
             } else {
@@ -63,22 +63,26 @@ public struct HomeView: View {
 struct HomeSearchResultsView: View {
     @Environment(\.dismissSearch)
     private var dismissSearch
+    @Environment(\.isSearching)
+    private var isSearching
     @Environment(HomeViewModel.self)
     private var viewModel
 
     var body: some View {
-        if viewModel.searchResults.isEmpty {
-            VStack {
-                Text("No City Selected")
-                    .font(.title)
-                    .padding()
-                Text("Please search for a city")
-            }
+        if !isSearching {
+            ErrorDetailView(
+                description: "No City Selected",
+                instruction: "Please search for a city"
+            )
         } else {
-            List(viewModel.searchResults) { result in
-                Text("\(result.name), \(result.region), \(result.country)").onTapGesture {
-                    dismissSearch()
-                    onLocationSelect(result)
+            ScrollView {
+                ForEach(viewModel.searchResults) { result in
+#warning("TODO: Add location weather here?")
+                    SearchResultRow(title: "\(result.name), \(result.region)")
+                        .onTapGesture {
+                            dismissSearch()
+                            onLocationSelect(result)
+                        }
                 }
             }
         }
