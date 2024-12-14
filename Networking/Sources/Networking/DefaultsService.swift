@@ -7,13 +7,17 @@
 
 import Foundation
 
-public protocol DefaultsServiceProtocol: Sendable {
-    func set<T: Codable>(_ value: T, forKey key: String)
-    func get<T: Codable>(forKey key: String) -> T?
-    func removeValue(forKey key: String)
+public enum DefaultsKey: String {
+    case selectedLocation
 }
 
-public final class DefaultsService: DefaultsServiceProtocol {
+public protocol DefaultsServiceProtocol: Actor {
+    func set<T: Codable>(_ value: T, forKey key: DefaultsKey)
+    func get<T: Codable>(forKey key: DefaultsKey) -> T?
+    func removeValue(forKey key: DefaultsKey)
+}
+
+public actor DefaultsService: DefaultsServiceProtocol {
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
 
@@ -29,17 +33,17 @@ public final class DefaultsService: DefaultsServiceProtocol {
         UserDefaults.standard
     }
 
-    public func set<T>(_ value: T, forKey key: String) where T : Decodable, T : Encodable {
+    public func set<T>(_ value: T, forKey key: DefaultsKey) where T : Decodable, T : Encodable {
         guard let data = try? encoder.encode(value) else { return }
-        defaults.set(data, forKey: key)
+        defaults.set(data, forKey: key.rawValue)
     }
 
-    public func get<T>(forKey key: String) -> T? where T : Decodable, T : Encodable {
-        guard let data = defaults.data(forKey: key) else { return nil }
+    public func get<T>(forKey key: DefaultsKey) -> T? where T : Decodable, T : Encodable {
+        guard let data = defaults.data(forKey: key.rawValue) else { return nil }
         return try? decoder.decode(T.self, from: data)
     }
 
-    public func removeValue(forKey key: String) {
-        defaults.removeObject(forKey: key)
+    public func removeValue(forKey key: DefaultsKey) {
+        defaults.removeObject(forKey: key.rawValue)
     }
 }
